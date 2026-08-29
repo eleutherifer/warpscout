@@ -128,6 +128,12 @@ paru -S warpscout-bin  # the release binary
 
 [warpscout](https://aur.archlinux.org/packages/warpscout) - [warpscout-bin](https://aur.archlinux.org/packages/warpscout-bin)
 
+### Android (app)
+
+[openwarpkit/warpscout-android](https://github.com/openwarpkit/warpscout-android) is a native Android app built on warpscout by [OpenWarpKit](https://github.com/openwarpkit). Install the APK for your architecture from its [releases](https://github.com/openwarpkit/warpscout-android/releases).
+
+In Termux the one-command install above still works as usual.
+
 ### Download a binary
 
 Open the newest release on the [Releases page](https://github.com/vernette/warpscout/releases). There is one archive per OS, pick yours:
@@ -308,6 +314,7 @@ Results are sorted by packet loss first, then by ping, so the top row is the bes
 | `-P, -tun-ping`     | Add the `TUN PING` and `LOSS` columns - RTT and packet loss measured inside the tunnel - and flag endpoints DPI tears down mid-stream. Off by default, since it takes longer. |
 | `-tun-ping-count N` | How many echoes per endpoint (default 10, minimum 5). Implies `-tun-ping`. The longer the burst, the more reliably it catches tunnels torn down a second or two in.           |
 | `-speed`            | Add the `SPEED` column: after the scan, download-test every endpoint the tables pick, one at a time. Kinda slow, and it does not change the ranking - see below.              |
+| `-best-by ping\|speed` | What makes an endpoint the best one - lowest ping (default) or highest download speed. Runs the speedtest phase, so it takes much longer. See below.                        |
 | `-n, -sample N`     | Addresses to try per subnet (default 5).                                                                                                                                      |
 | `-f, -full`         | Try all 256 addresses of every subnet. Slow but thorough.                                                                                                                     |
 | `-port N`           | Probe only this port on every endpoint, instead of taking the first reachable one. Phase 1 is skipped.                                                                        |
@@ -347,7 +354,19 @@ It is a phase of its own - `Speedtest phase` in the live dashboard, right after 
 
 ![WARPSCOUT speedtest phase](.github/assets/warpscout-speed.png)
 
-The ranking does not change. Sorting stays on loss and ping, and `-best`/`-conf` pick the same endpoint they would without the flag - the speed is there to look at, not to rank by. With `-best` or `-conf -` and no report file, the phase is skipped entirely: there would be nowhere to show the column.
+On its own the flag changes no ranking: sorting stays on loss and ping, and `-best`/`-conf` pick the same endpoint they would without it - the speed is there to look at. With `-best` or `-conf -` and no report file, the phase is then skipped entirely.
+
+#### Ranking by speed: `-best-by`
+
+`-best-by speed` makes throughput the ranking key instead of ping - for the order of every table and for the endpoint `-best` and `-conf` return:
+
+```sh
+warpscout scan -p awg -best -best-by speed
+```
+
+The flag runs the speedtest phase itself, including under `-best` and `-conf -`, so the run takes as long as a `-speed` one. `-best-by ping` is the default and is the old behaviour.
+
+Which endpoints get measured is still decided by ping - the speedtest phase runs after the scan and picks the best of each subnet and node the same way the tables do. So `-best-by speed` gives you the fastest of those picks, not the fastest of every endpoint scanned. Endpoints with no measurement sort last.
 
 The report file is a flat list: a commented header, then every working endpoint, then the torn-down ones, and the best endpoint of each edge node at the end. Easy to process with scripts.
 
@@ -446,11 +465,12 @@ warpscout scan -p awg -conf warp.conf -dns 9.9.9.9,149.112.112.112
 warpscout scan -p awg -conf warp.conf -no-dns
 ```
 
-`-conf-type` picks the config format. The default `native` is the one above: a `.conf` for `wg`/`awg` and a `config.json` for `masque`, to be used with [usque](https://github.com/Diniboy1123/usque). `mihomo` writes a `proxies:` block for [mihomo](https://github.com/MetaCubeX/mihomo), which speaks both AmneziaWG and MASQUE.
+`-conf-type` picks the config format. The default `native` is the one above: a `.conf` for `wg`/`awg` and a `config.json` for `masque`, to be used with [usque](https://github.com/Diniboy1123/usque). `mihomo` writes a `proxies:` block for [mihomo](https://github.com/MetaCubeX/mihomo), which speaks both AmneziaWG and MASQUE. `mihomo-json` writes the same proxies as a JSON array.
 
 ```sh
 warpscout scan -p awg -conf warp.yaml -conf-type mihomo
 warpscout scan -p masque -conf warp.yaml -conf-type mihomo
+warpscout scan -p awg -conf - -conf-type mihomo-json | jq '.[0]'
 ```
 
 `-target` scans the addresses you name instead of the built-in pools. It takes single IP addresses, whole CIDR ranges, or any mix of the two, comma-separated:

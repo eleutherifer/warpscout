@@ -185,7 +185,10 @@ func runScanCmd(ctx context.Context, opts options) error {
 		return fmt.Errorf("%s", noEndpointMsg(opts))
 	}
 
-	if opts.speed && showsSpeed(opts) {
+	if (opts.speed || opts.bestBy == bestKeySpeed) && showsSpeed(opts) {
+		if !opts.speed {
+			fmt.Fprintln(os.Stderr, errPal.dim("\n-best-by speed ranks by throughput, so the speedtest phase runs even without -speed"))
+		}
 		runWithUI(opts, cancel, false, "", "q to skip the rest", func(emit emitter) {
 			measureSpeed(ctx, ph, time.Duration(opts.timeoutSec)*time.Second, emit)
 		})
@@ -234,6 +237,9 @@ func tablesFollow(opts options) bool {
 }
 
 func showsSpeed(opts options) bool {
+	if opts.bestBy == bestKeySpeed {
+		return true
+	}
 	if !opts.best && opts.conf != confStdout {
 		return true
 	}
@@ -393,12 +399,12 @@ func writeConfFile(opts options, ph phaseResult) error {
 	fmt.Fprintln(os.Stderr, errPal.dim(fmt.Sprintf("\n%s config for %s written to %s", ph.run.name, best.endpoint, opts.conf)))
 	if outer != nil {
 		note := fmt.Sprintf("  it holds both tunnels of the chain (outer %s) - split it in two before use", outer.label)
-		if opts.confType == confTypeMihomo {
+		if isMihomo(opts.confType) {
 			note = fmt.Sprintf("  it chains through %s itself (dialer-proxy)", outer.label)
 		}
 		fmt.Fprintln(os.Stderr, errPal.dim(note))
 	}
-	if ph.run.isMASQUE() && opts.confType != confTypeMihomo {
+	if ph.run.isMASQUE() && !isMihomo(opts.confType) {
 		if _, port, err := net.SplitHostPort(best.endpoint); err == nil {
 			h2 := ""
 			if ph.run.isH2() {

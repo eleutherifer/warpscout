@@ -28,6 +28,7 @@ type options struct {
 	output         string
 	conf           string
 	confType       string
+	bestBy         string
 	dns            string
 	proxy          string
 	relay          string
@@ -122,7 +123,7 @@ var (
 		{"o", "output", "FILE", "full per-endpoint report file (default warpscout-report-<timestamp>.txt)"},
 		{"", "no-report", "", "skip the report file entirely (overrides -o)"},
 		{"", "conf", "FILE", "write a ready-to-import config for the best endpoint (\"-\" prints it instead)"},
-		{"", "conf-type", "KIND", "format of -conf: native (wg/awg .conf, usque config.json) or mihomo"},
+		{"", "conf-type", "KIND", "format of -conf: native (wg/awg .conf, usque config.json), mihomo or mihomo-json"},
 		{"", "table-off", "", "add \"Table = off\" to the generated config: bring the interface up without touching routes"},
 		{"", "mtu", "N", "set MTU in the generated config (default: leave the line out)"},
 		{"", "dns", "LIST", "DNS servers in the generated config: comma-separated (default: Cloudflare, following -6)"},
@@ -132,6 +133,7 @@ var (
 		{"", "exclude-node", "COLO", "drop endpoints landing on these edge nodes: comma-separated IATA codes"},
 		{"", "exclude-country", "ISO", "drop endpoints whose edge node sits in these countries: comma-separated ISO codes"},
 		{"", "best", "", "print just the best endpoint as ip:port on stdout (for scripts and pipes)"},
+		{"", "best-by", "ping|speed", "what makes an endpoint best, both for -best/-conf and for the order of every table: lowest ping (default) or highest download speed (runs the -speed phase, so it takes much longer)"},
 		{"", "plain", "", "force plain line output (no live TUI)"},
 		{"", "emoji", "", "prefix the colo region with a country flag emoji (rendering depends on the terminal)"},
 	}}
@@ -257,6 +259,7 @@ func setupScanFlags(fs *flag.FlagSet, o *options) {
 	fs.StringVar(&o.excludeNode, "exclude-node", "", "")
 	fs.StringVar(&o.excludeCountry, "exclude-country", "", "")
 	fs.BoolVar(&o.best, "best", false, "")
+	fs.StringVar(&o.bestBy, "best-by", bestKeyPing, "")
 	fs.StringVar(&o.conf, "conf", "", "")
 	fs.StringVar(&o.confType, "conf-type", confTypeNative, "")
 	fs.StringVar(&masqueSNI, "masque-sni", masqueDefaultSNI, "")
@@ -373,6 +376,7 @@ func applyCommonFlags(fs *flag.FlagSet, o *options) {
 	validateJunkParams()
 	validateMTU(*o)
 	validateConfType(*o)
+	validateBestBy(o)
 	rejectBestConfStdout(*o)
 	applyDNS(o)
 	applyTarget(o)
@@ -547,6 +551,17 @@ func rejectBestConfStdout(o options) {
 	}
 }
 
+func validateBestBy(o *options) {
+	if o.bestBy == "" {
+		return
+	}
+	if !slices.Contains(bestKeys, o.bestBy) {
+		fmt.Fprintf(os.Stderr, "-best-by %q must be one of %s\n", o.bestBy, strings.Join(bestKeys, ", "))
+		os.Exit(2)
+	}
+	bestBy = o.bestBy
+}
+
 func validateConfType(o options) {
 	if o.confType == "" {
 		return
@@ -559,8 +574,8 @@ func validateConfType(o options) {
 		fmt.Fprintln(os.Stderr, "-conf-type needs -conf FILE")
 		os.Exit(2)
 	}
-	if o.tableOff && o.confType == confTypeMihomo {
-		fmt.Fprintln(os.Stderr, "-table-off does not apply to -conf-type mihomo: the client owns the routes")
+	if o.tableOff && isMihomo(o.confType) {
+		fmt.Fprintf(os.Stderr, "-table-off does not apply to -conf-type %s: the client owns the routes\n", o.confType)
 		os.Exit(2)
 	}
 }
