@@ -1,3 +1,5 @@
+# В данном форке:
+- заменена ссылка на API для регистрации на незабаненную ссылку на API для ZT
 <h1 align="center">WARPSCOUT</h1>
 
 ![WARPSCOUT multi-node](.github/assets/warpscout-multi-node.png)
@@ -221,7 +223,7 @@ The command writes `warpscout-account.json` into the current directory. Without 
 WARPSCOUT does what the official WARP client does on first launch: it registers a new device with Cloudflare and gets a WireGuard peer for it.
 
 1. A fresh X25519 keypair is generated locally. The private half stays on the machine the tool runs on.
-2. The public half goes to `https://api.cloudflareclient.com/v0a4005/reg`, pretending to be the Android client. The answer carries an account `id`, a bearer token and the WARP peer's public key.
+2. The public half goes to `https://api.devices.cloudflare.com/v0a4005/reg`, pretending to be the Android client. The answer carries an account `id`, a bearer token and the WARP peer's public key.
 3. A second request switches WARP on for that account (`warp_enabled: true`).
 4. The result is written to the account file:
 
@@ -273,7 +275,7 @@ On a second run the `id` and `token` are taken from the file and only the keys c
 
 Normally this is a simple process of two requests. On a filtered network those requests do not get out at all.
 
-WARPSCOUT first checks whether `api.cloudflareclient.com` answers. If it does not, it retries through the default relay: a small reverse proxy that DPI usually leaves alone. `-relay URL` points it at a relay of your own, `-relay none` skips this step entirely. How to deploy your own is described in the [nellimonix/base-relay](https://github.com/nellimonix/base-relay) repository.
+WARPSCOUT first checks whether `api.devices.cloudflare.com` answers. If it does not, it retries through the default relay: a small reverse proxy that DPI usually leaves alone. `-relay URL` points it at a relay of your own, `-relay none` skips this step entirely. How to deploy your own is described in the [nellimonix/base-relay](https://github.com/nellimonix/base-relay) repository.
 
 If the relay is unreachable too, WARPSCOUT registers _through_ a WARP tunnel: it goes over endpoint addresses, brings up a tunnel to the first one that completes a handshake, and sends the same registration requests through it. AmneziaWG is tried first, then plain WireGuard, and for AmneziaWG a few different first packets (`I1`) are cycled through as well, until one gets past the filter.
 
