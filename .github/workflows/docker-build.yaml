@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE: vernette/warpscout
+  IMAGE: eleutherifer/warpscout
 
 jobs:
   build:

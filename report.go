@@ -39,7 +39,7 @@ func newConStyles(r *lipgloss.Renderer) conStyles {
 	}
 }
 
-const projectURL = "https://github.com/vernette/warpscout"
+const projectURL = "https://github.com/eleutherifer/warpscout"
 
 const (
 	statusOK = iota

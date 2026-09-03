@@ -13,7 +13,7 @@ The command writes `warpscout-account.json` into the current directory. Without 
 WARPSCOUT does what the official WARP client does on first launch: it registers a new device with Cloudflare and gets a WireGuard peer for it.
 
 1. A fresh X25519 key pair is generated locally. The private half never leaves your machine.
-2. The public half goes to `https://api.cloudflareclient.com/v0a4005/reg` as an Android client. The answer carries an account `id`, a bearer token and the WARP peer public key.
+2. The public half goes to `https://api.devices.cloudflare.com/v0a4005/reg` as an Android client. The answer carries an account `id`, a bearer token and the WARP peer public key.
 3. A second request enables WARP for that account (`warp_enabled: true`).
 4. The result is written to the account file.
 
@@ -53,7 +53,7 @@ A brand-new account is minted in two cases: with `-fresh`, which ignores the fil
 
 On a filtering network the registration requests never leave at all. WARPSCOUT works around that in a chain.
 
-1. **Directly.** It checks whether `api.cloudflareclient.com` answers.
+1. **Directly.** It checks whether `api.devices.cloudflare.com` answers.
 2. **Through a relay.** A small reverse proxy DPI usually leaves alone. The default address is built in, `-relay URL` points at your own, `-relay none` skips the step. To run your own relay see [nellimonix/base-relay](https://github.com/nellimonix/base-relay).
 3. **Through a WARP tunnel.** Endpoint addresses are swept, a tunnel is brought up to the first one that handshakes, and the same registration requests go through it. AmneziaWG is tried first, then plain WireGuard, and for AmneziaWG several different first packets (`I1`) are tried as well.
 

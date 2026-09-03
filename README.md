@@ -1,3 +1,6 @@
+# В данном форке:
+- заменена используемая для регистрации ссылка на API на незабаненную ссылку на API для Zero Trust.
+
 <h1 align="center">WARPSCOUT</h1>
 
 ![WARPSCOUT multi-node](.github/assets/warpscout-multi-node.png)
@@ -5,11 +8,11 @@
 <p align="center">Find Cloudflare WARP endpoints that work from your network, and see where they exit.</p>
 
 <p align="center">
-  <a href="https://github.com/vernette/warpscout/releases"><img src="https://img.shields.io/github/release/vernette/warpscout.svg" alt="GitHub Release"></a>
-  <a href="https://github.com/vernette/warpscout/actions/workflows/release.yaml"><img src="https://img.shields.io/github/actions/workflow/status/vernette/warpscout/release.yaml" alt="Build Status"></a>
-  <a href="https://github.com/vernette/warpscout/actions/workflows/test.yaml"><img src="https://img.shields.io/github/actions/workflow/status/vernette/warpscout/test.yaml?label=tests" alt="Tests"></a>
-  <a href="https://github.com/vernette/warpscout/releases"><img src="https://img.shields.io/github/downloads/vernette/warpscout/total" alt="GitHub Downloads"></a>
-  <a href="https://hub.docker.com/r/vernette/warpscout"><img src="https://img.shields.io/docker/pulls/vernette/warpscout?logo=docker" alt="Docker Pulls"></a>
+  <a href="https://github.com/eleutherifer/warpscout/releases"><img src="https://img.shields.io/github/release/eleutherifer/warpscout.svg" alt="GitHub Release"></a>
+  <a href="https://github.com/eleutherifer/warpscout/actions/workflows/release.yaml"><img src="https://img.shields.io/github/actions/workflow/status/eleutherifer/warpscout/release.yaml" alt="Build Status"></a>
+  <a href="https://github.com/eleutherifer/warpscout/actions/workflows/test.yaml"><img src="https://img.shields.io/github/actions/workflow/status/eleutherifer/warpscout/test.yaml?label=tests" alt="Tests"></a>
+  <a href="https://github.com/eleutherifer/warpscout/releases"><img src="https://img.shields.io/github/downloads/eleutherifer/warpscout/total" alt="GitHub Downloads"></a>
+  <a href="https://hub.docker.com/r/eleutherifer/warpscout"><img src="https://img.shields.io/docker/pulls/eleutherifer/warpscout?logo=docker" alt="Docker Pulls"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="License: MIT"></a>
 </p>
 
@@ -43,7 +46,7 @@ The official WARP client gives you no way to pick the node. WARPSCOUT walks the 
 
 ### Windows
 
-1. Open the [releases page](https://github.com/vernette/warpscout/releases) and download `warpscout_..._windows_amd64.zip`.
+1. Open the [releases page](https://github.com/eleutherifer/warpscout/releases) and download `warpscout_..._windows_amd64.zip`.
 2. Unpack it anywhere, for example into `C:\warpscout`.
 3. Open that folder, hold **Shift** and right-click empty space → **Open PowerShell window here** (on Windows 11 - **Open in Terminal**).
 4. Check that it runs:
@@ -66,13 +69,13 @@ In Termux the one-line install below works as it does on Linux.
 ### Linux, macOS, OpenWrt, Termux
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/vernette/warpscout/master/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/eleutherifer/warpscout/master/install.sh | sh
 ```
 
 If there is no `curl` (OpenWrt routers, for one):
 
 ```sh
-wget -qO- https://raw.githubusercontent.com/vernette/warpscout/master/install.sh | sh
+wget -qO- https://raw.githubusercontent.com/eleutherifer/warpscout/master/install.sh | sh
 ```
 
 The script picks the right archive for your system and puts `warpscout` into `~/.local/bin`, on OpenWrt into `/usr/bin`, in Termux into `$PREFIX/bin`. Run it again to update.
@@ -94,16 +97,16 @@ Docker - see [running in Docker](docs/en/docker.md).
 From source, Go 1.25 or newer:
 
 ```sh
-go install github.com/vernette/warpscout@latest
+go install github.com/eleutherifer/warpscout@latest
 ```
 
 Installer options go after `sh -s --`, and `INSTALL_DIR` picks another directory:
 
 ```sh
-INSTALL_DIR=/usr/local/bin sh -c "$(curl -fsSL https://raw.githubusercontent.com/vernette/warpscout/master/install.sh)"
+INSTALL_DIR=/usr/local/bin sh -c "$(curl -fsSL https://raw.githubusercontent.com/eleutherifer/warpscout/master/install.sh)"
 
-curl -fsSL https://raw.githubusercontent.com/vernette/warpscout/master/install.sh | sh -s -- --version v0.8.1
-curl -fsSL https://raw.githubusercontent.com/vernette/warpscout/master/install.sh | sh -s -- --uninstall
+curl -fsSL https://raw.githubusercontent.com/eleutherifer/warpscout/master/install.sh | sh -s -- --version v0.8.1
+curl -fsSL https://raw.githubusercontent.com/eleutherifer/warpscout/master/install.sh | sh -s -- --uninstall
 ```
 
 If you want a specific archive by hand, here is what to take:

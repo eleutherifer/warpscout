@@ -6,10 +6,10 @@
 
 ```sh
 # Регистрация аккаунта WARP
-docker run --rm -it --user "$(id -u):$(id -g)" -v "$PWD:/data" vernette/warpscout register
+docker run --rm -it --user "$(id -u):$(id -g)" -v "$PWD:/data" eleutherifer/warpscout register
 
 # Скан по AmneziaWG
-docker run --pull always --rm -it --user "$(id -u):$(id -g)" -v "$PWD:/data" vernette/warpscout scan -p awg
+docker run --pull always --rm -it --user "$(id -u):$(id -g)" -v "$PWD:/data" eleutherifer/warpscout scan -p awg
 ```
 
 ## Сохранить аккаунт между запусками
@@ -29,7 +29,7 @@ docker run --pull always --rm -it --user "$(id -u):$(id -g)" -v "$PWD:/data" ver
 
 ```sh
 docker run --rm -it --sysctl net.ipv4.ping_group_range="0 2147483647" \
-  -v "$PWD:/data" vernette/warpscout scan -p awg
+  -v "$PWD:/data" eleutherifer/warpscout scan -p awg
 ```
 
 `TUN PING` работает внутри туннеля и не требует привилегий ни в каком контейнере.
@@ -39,8 +39,8 @@ docker run --rm -it --sysctl net.ipv4.ping_group_range="0 2147483647" \
 `-6` и `-I` требуют сети хоста. У контейнера своё сетевое пространство имён, интерфейсов хоста там нет, а IPv6 обычно выключен:
 
 ```sh
-docker run --rm -it --network host -v "$PWD:/data" vernette/warpscout scan -p awg -6
-docker run --rm -it --network host -v "$PWD:/data" vernette/warpscout scan -p awg -I eth0
+docker run --rm -it --network host -v "$PWD:/data" eleutherifer/warpscout scan -p awg -6
+docker run --rm -it --network host -v "$PWD:/data" eleutherifer/warpscout scan -p awg -I eth0
 ```
 
 ## Собрать образ
@@ -50,5 +50,5 @@ docker run --rm -it --network host -v "$PWD:/data" vernette/warpscout scan -p aw
 docker build -t warpscout .
 
 # под другую платформу
-docker buildx build --platform linux/arm64 -t vernette/warpscout:arm --load .
+docker buildx build --platform linux/arm64 -t eleutherifer/warpscout:arm --load .
 ```

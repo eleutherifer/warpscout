@@ -1,3 +1,6 @@
+# В данном форке:
+- заменена используемая для регистрации ссылка на API на незабаненную ссылку на API для Zero Trust.
+
 <h1 align="center">WARPSCOUT</h1>
 
 ![WARPSCOUT multi-node](.github/assets/warpscout-multi-node.png)
@@ -5,11 +8,11 @@
 <p align="center">Поиск эндпоинтов Cloudflare WARP, которые работают из вашей сети, и проверка того, где они выходят.</p>
 
 <p align="center">
-  <a href="https://github.com/vernette/warpscout/releases"><img src="https://img.shields.io/github/release/vernette/warpscout.svg" alt="GitHub Release"></a>
-  <a href="https://github.com/vernette/warpscout/actions/workflows/release.yaml"><img src="https://img.shields.io/github/actions/workflow/status/vernette/warpscout/release.yaml" alt="Build Status"></a>
-  <a href="https://github.com/vernette/warpscout/actions/workflows/test.yaml"><img src="https://img.shields.io/github/actions/workflow/status/vernette/warpscout/test.yaml?label=tests" alt="Tests"></a>
-  <a href="https://github.com/vernette/warpscout/releases"><img src="https://img.shields.io/github/downloads/vernette/warpscout/total" alt="GitHub Downloads"></a>
-  <a href="https://hub.docker.com/r/vernette/warpscout"><img src="https://img.shields.io/docker/pulls/vernette/warpscout?logo=docker" alt="Docker Pulls"></a>
+  <a href="https://github.com/eleutherifer/warpscout/releases"><img src="https://img.shields.io/github/release/eleutherifer/warpscout.svg" alt="GitHub Release"></a>
+  <a href="https://github.com/eleutherifer/warpscout/actions/workflows/release.yaml"><img src="https://img.shields.io/github/actions/workflow/status/eleutherifer/warpscout/release.yaml" alt="Build Status"></a>
+  <a href="https://github.com/eleutherifer/warpscout/actions/workflows/test.yaml"><img src="https://img.shields.io/github/actions/workflow/status/eleutherifer/warpscout/test.yaml?label=tests" alt="Tests"></a>
+  <a href="https://github.com/eleutherifer/warpscout/releases"><img src="https://img.shields.io/github/downloads/eleutherifer/warpscout/total" alt="GitHub Downloads"></a>
+  <a href="https://hub.docker.com/r/eleutherifer/warpscout"><img src="https://img.shields.io/docker/pulls/eleutherifer/warpscout?logo=docker" alt="Docker Pulls"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="License: MIT"></a>
 </p>
 
@@ -43,7 +46,7 @@
 
 ### Windows
 
-1. Откройте [страницу релизов](https://github.com/vernette/warpscout/releases) и скачайте `warpscout_..._windows_amd64.zip`.
+1. Откройте [страницу релизов](https://github.com/eleutherifer/warpscout/releases) и скачайте `warpscout_..._windows_amd64.zip`.
 2. Распакуйте архив в любую папку, например `C:\warpscout`.
 3. Откройте эту папку в проводнике, зажмите **Shift** и нажмите правой кнопкой мыши по пустому месту → **Открыть окно PowerShell здесь** (в Windows 11 - **Открыть в терминале**).
 4. Проверьте, что всё работает:
@@ -66,13 +69,13 @@
 ### Linux, macOS, OpenWrt, Termux
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/vernette/warpscout/master/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/eleutherifer/warpscout/master/install.sh | sh
 ```
 
 Если `curl` нет (например, на OpenWrt):
 
 ```sh
-wget -qO- https://raw.githubusercontent.com/vernette/warpscout/master/install.sh | sh
+wget -qO- https://raw.githubusercontent.com/eleutherifer/warpscout/master/install.sh | sh
 ```
 
 Скрипт подберёт архив под вашу систему и положит `warpscout` в `~/.local/bin`, на OpenWrt - в `/usr/bin`, в Termux - в `$PREFIX/bin`. Для обновления просто запустите его ещё раз.
@@ -94,16 +97,16 @@ Docker - см. [запуск в Docker](docs/ru/docker.md).
 Сборка из исходников, Go 1.25 или новее:
 
 ```sh
-go install github.com/vernette/warpscout@latest
+go install github.com/eleutherifer/warpscout@latest
 ```
 
 Опции установщика передаются после `sh -s --`, а каталог выбирает `INSTALL_DIR`:
 
 ```sh
-INSTALL_DIR=/usr/local/bin sh -c "$(curl -fsSL https://raw.githubusercontent.com/vernette/warpscout/master/install.sh)"
+INSTALL_DIR=/usr/local/bin sh -c "$(curl -fsSL https://raw.githubusercontent.com/eleutherifer/warpscout/master/install.sh)"
 
-curl -fsSL https://raw.githubusercontent.com/vernette/warpscout/master/install.sh | sh -s -- --version v0.8.1
-curl -fsSL https://raw.githubusercontent.com/vernette/warpscout/master/install.sh | sh -s -- --uninstall
+curl -fsSL https://raw.githubusercontent.com/eleutherifer/warpscout/master/install.sh | sh -s -- --version v0.8.1
+curl -fsSL https://raw.githubusercontent.com/eleutherifer/warpscout/master/install.sh | sh -s -- --uninstall
 ```
 
 Если нужен конкретный архив вручную, вот таблица соответствия:

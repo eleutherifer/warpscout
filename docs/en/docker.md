@@ -6,10 +6,10 @@ The image is multi-arch (`linux/amd64` and `linux/arm64`). The container's worki
 
 ```sh
 # Register a WARP account
-docker run --rm -it --user "$(id -u):$(id -g)" -v "$PWD:/data" vernette/warpscout register
+docker run --rm -it --user "$(id -u):$(id -g)" -v "$PWD:/data" eleutherifer/warpscout register
 
 # Scan over AmneziaWG
-docker run --pull always --rm -it --user "$(id -u):$(id -g)" -v "$PWD:/data" vernette/warpscout scan -p awg
+docker run --pull always --rm -it --user "$(id -u):$(id -g)" -v "$PWD:/data" eleutherifer/warpscout scan -p awg
 ```
 
 ## Keeping the account between runs
@@ -29,7 +29,7 @@ On a current Docker there is nothing to do. If `ENDPOINT PING` shows `?` (an old
 
 ```sh
 docker run --rm -it --sysctl net.ipv4.ping_group_range="0 2147483647" \
-  -v "$PWD:/data" vernette/warpscout scan -p awg
+  -v "$PWD:/data" eleutherifer/warpscout scan -p awg
 ```
 
 `TUN PING` runs inside the tunnel and needs no privileges in any container.
@@ -39,8 +39,8 @@ docker run --rm -it --sysctl net.ipv4.ping_group_range="0 2147483647" \
 `-6` and `-I` need the host network. A container has its own network namespace, the host's interfaces are not there, and IPv6 is usually off:
 
 ```sh
-docker run --rm -it --network host -v "$PWD:/data" vernette/warpscout scan -p awg -6
-docker run --rm -it --network host -v "$PWD:/data" vernette/warpscout scan -p awg -I eth0
+docker run --rm -it --network host -v "$PWD:/data" eleutherifer/warpscout scan -p awg -6
+docker run --rm -it --network host -v "$PWD:/data" eleutherifer/warpscout scan -p awg -I eth0
 ```
 
 ## Building the image
@@ -50,5 +50,5 @@ docker run --rm -it --network host -v "$PWD:/data" vernette/warpscout scan -p aw
 docker build -t warpscout .
 
 # for another platform
-docker buildx build --platform linux/arm64 -t vernette/warpscout:arm --load .
+docker buildx build --platform linux/arm64 -t eleutherifer/warpscout:arm --load .
 ```
